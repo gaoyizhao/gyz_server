@@ -2,26 +2,35 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>开心每一天 ❤️</title>
+    <title>我们和好吧 ❤️</title>
     <style>
         body {
-            background: #f0f0f0;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
             font-family: 'Microsoft YaHei', sans-serif;
+            overflow: hidden;
         }
 
         .container {
             text-align: center;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 80%;
+            position: relative;
+            z-index: 1;
         }
 
         .heart {
             position: relative;
             width: 100px;
             height: 90px;
+            margin: 0 auto 30px;
             animation: heartbeat 1.2s infinite;
         }
 
@@ -52,18 +61,236 @@
             45% { transform: scale(1.15); }
         }
 
-        .text {
-            margin-top: 30px;
+        .question {
             font-size: 2em;
-            color: #333;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            color: #ff3860;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .yes-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .no-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .message {
+            font-size: 1.8em;
+            color: #ff3860;
+            margin-top: 20px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            border-radius: 50%;
+            animation: confetti-fall 5s linear forwards;
+            z-index: 0;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .floating-hearts {
+            position: absolute;
+            font-size: 20px;
+            animation: float-up 4s linear forwards;
+            opacity: 0;
+            z-index: 0;
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="heart"></div>
-        <div class="text">小瑛瑛 开心每一天 🌸</div>
+        <div class="question">我们和好吧？</div>
+        <div class="buttons">
+            <button class="yes-btn" id="yesBtn">和好 ❤️</button>
+            <button class="no-btn" id="noBtn">不和好 😠</button>
+        </div>
+        <div class="message" id="message"></div>
     </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const message = document.getElementById('message');
+        const buttons = document.querySelector('.buttons');
+        const container = document.querySelector('.container');
+        let clickCount = 0;
+        const maxClickCount = 4; // 设置最多点击"不和好"的次数
+
+        // 点击"和好"按钮
+        yesBtn.addEventListener('click', function() {
+            message.textContent = "你最好了！我爱你！❤️";
+            message.style.opacity = '1';
+            
+            // 创建彩色纸屑效果
+            createConfetti();
+            
+            // 创建漂浮的爱心
+            createFloatingHearts();
+            
+            // 隐藏所有按钮
+            document.querySelectorAll('.yes-btn, .no-btn').forEach(btn => {
+                btn.style.display = 'none';
+            });
+        });
+
+        // 点击"不和好"按钮
+        noBtn.addEventListener('click', function() {
+            clickCount++;
+            
+            // 交换按钮位置
+            if (buttons.style.flexDirection === 'row-reverse') {
+                buttons.style.flexDirection = 'row';
+            } else {
+                buttons.style.flexDirection = 'row-reverse';
+            }
+            
+            // 根据点击次数改变按钮文字和大小
+            switch(clickCount) {
+                case 1:
+                    noBtn.textContent = "真的不和好 😤";
+                    break;
+                case 2:
+                    noBtn.textContent = "再考虑一下嘛 😢";
+                    noBtn.style.fontSize = '1.1em';
+                    break;
+                case 3:
+                    noBtn.textContent = "求求你啦 🥺";
+                    noBtn.style.fontSize = '1.3em';
+                    noBtn.style.padding = '15px 35px';
+                    break;
+                case maxClickCount:
+                    // 最后一次点击"不和好"的特殊处理
+                    noBtn.style.display = 'none'; // 隐藏不和好按钮
+                    
+                    // 创建第二个和好按钮
+                    const newYesBtn = yesBtn.cloneNode(true);
+                    newYesBtn.id = 'yesBtn2';
+                    newYesBtn.textContent = "和好 💕";
+                    buttons.appendChild(newYesBtn);
+                    
+                    // 为第二个和好按钮添加点击事件
+                    newYesBtn.addEventListener('click', function() {
+                        yesBtn.click();
+                    });
+                    
+                    // 修改第一个和好按钮的文字
+                    yesBtn.textContent = "和好 ❤️";
+                    return; // 不再执行后面的代码
+            }
+            
+            // 随机移动按钮位置（防止轻易点击）
+            if (clickCount < maxClickCount) {
+                const maxX = container.offsetWidth - noBtn.offsetWidth;
+                const maxY = container.offsetHeight - noBtn.offsetHeight;
+                
+                noBtn.style.position = 'absolute';
+                noBtn.style.left = Math.random() * maxX + 'px';
+                noBtn.style.top = Math.random() * maxY + 'px';
+            }
+        });
+
+        // 创建彩色纸屑效果
+        function createConfetti() {
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = getRandomColor();
+                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                document.body.appendChild(confetti);
+                
+                // 动画结束后移除元素
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+
+        // 创建漂浮的爱心
+        function createFloatingHearts() {
+            for (let i = 0; i < 30; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-hearts';
+                heart.textContent = ['❤️', '💖', '💗', '💓', '💞', '💕'][Math.floor(Math.random() * 6)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(heart);
+                
+                // 动画结束后移除元素
+                setTimeout(() => {
+                    heart.remove();
+                }, 6000);
+            }
+        }
+
+        // 生成随机颜色
+        function getRandomColor() {
+            const colors = ['#ff3860', '#4CAF50', '#2196F3', '#FFC107', '#9C27B0', '#00BCD4'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+    </script>
 </body>
 </html>
