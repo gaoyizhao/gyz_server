@@ -2,38 +2,60 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我们和好吧 ❤️</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#ff3860">
+    <title>我们和好吧 ❤️ | 情侣互动小游戏</title>
     <style>
+        :root {
+            --primary-color: #ff3860;
+            --secondary-color: #4CAF50;
+            --error-color: #f44336;
+            --text-color: #333;
+            --bg-gradient: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            background: var(--bg-gradient);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            font-family: 'Microsoft YaHei', sans-serif;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
             overflow: hidden;
-            touch-action: none; /* 防止滑动 */
+            touch-action: none;
+            color: var(--text-color);
         }
 
         .container {
             text-align: center;
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 40px 60px; /* 增大内边距 */
-            border-radius: 25px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            width: 85%;
-            max-width: 500px; /* 增大最大宽度 */
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 2.5rem 3rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.15);
+            width: 92%;
+            max-width: 28rem;
+            min-height: 32rem;
             position: relative;
             z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .heart {
             position: relative;
-            width: 120px; /* 增大爱心尺寸 */
-            height: 108px;
-            margin: 0 auto 30px;
+            width: 7rem;
+            height: 6.3rem;
+            margin: 0 auto 2rem;
             animation: heartbeat 1.2s infinite;
         }
 
@@ -41,12 +63,12 @@
         .heart:after {
             position: absolute;
             content: "";
-            left: 60px;
+            left: 3.5rem;
             top: 0;
-            width: 60px;
-            height: 96px;
-            background: #ff3860;
-            border-radius: 60px 60px 0 0;
+            width: 3.5rem;
+            height: 5.6rem;
+            background: var(--primary-color);
+            border-radius: 3.5rem 3.5rem 0 0;
             transform: rotate(-45deg);
             transform-origin: 0 100%;
         }
@@ -65,74 +87,89 @@
         }
 
         .question {
-            font-size: 2.2em; /* 增大字体 */
-            color: #ff3860;
-            margin-bottom: 35px;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 2.5rem;
             font-weight: bold;
-            line-height: 1.3;
+            line-height: 1.4;
+            padding: 0 0.5rem;
+        }
+
+        .buttons-container {
+            width: 100%;
+            position: relative;
+            margin-bottom: 1.5rem;
+            min-height: 5rem;
         }
 
         .buttons {
             display: flex;
-            justify-content: center;
-            gap: 25px; /* 增大按钮间距 */
-            margin-bottom: 25px;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            position: relative;
+            transition: all 0.3s;
         }
 
         button {
-            padding: 15px 35px; /* 增大按钮尺寸 */
-            font-size: 1.3em;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
             border: none;
-            border-radius: 60px;
+            border-radius: 3rem;
             cursor: pointer;
             transition: all 0.3s;
             font-weight: bold;
-            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.12);
-            min-width: 140px; /* 设置最小宽度 */
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.12);
+            min-width: 8rem;
+            position: relative;
+            z-index: 2;
+            flex-shrink: 0;
         }
 
         .yes-btn {
-            background-color: #4CAF50;
+            background-color: var(--secondary-color);
             color: white;
+            order: 2; /* 放在右侧 */
         }
 
         .no-btn {
-            background-color: #f44336;
+            background-color: var(--error-color);
             color: white;
+            order: 1; /* 放在左侧 */
+            position: static; /* 移除绝对定位 */
         }
 
         button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-0.2rem);
+            box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.15);
         }
 
         button:active {
-            transform: translateY(1px);
+            transform: translateY(0.1rem);
         }
 
         .message {
-            font-size: 2em; /* 增大消息字体 */
-            color: #ff3860;
-            margin: 30px 0;
-            padding: 20px;
+            font-size: 1.6rem;
+            color: var(--primary-color);
+            margin: 1.5rem 0;
+            padding: 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
             opacity: 0;
             transition: opacity 0.5s;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 20px;
-            border: 2px dashed #ff3860;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 1rem;
+            border: 2px dashed var(--primary-color);
             position: relative;
             z-index: 2;
+            min-height: 5rem;
         }
 
         .confetti {
             position: fixed;
-            width: 12px;
-            height: 12px;
-            background-color: #f00;
+            width: 0.8rem;
+            height: 0.8rem;
+            background-color: var(--primary-color);
             border-radius: 50%;
             animation: confetti-fall 5s linear forwards;
             z-index: 0;
@@ -152,7 +189,7 @@
 
         .floating-hearts {
             position: fixed;
-            font-size: 24px;
+            font-size: 1.8rem;
             animation: float-up 4s linear forwards;
             opacity: 0;
             z-index: 0;
@@ -171,7 +208,38 @@
             }
         }
 
-        /* 防止移动端滑动 */
+        .branding {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 1rem;
+            font-size: 0.8rem;
+            color: rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 2rem 1.5rem;
+                width: 95%;
+                min-height: 26rem;
+            }
+            
+            .question {
+                font-size: 1.6rem;
+                margin-bottom: 2rem;
+            }
+            
+            button {
+                padding: 0.8rem 1.5rem;
+                font-size: 1.1rem;
+                min-width: 7rem;
+            }
+            
+            .message {
+                font-size: 1.4rem;
+                padding: 1rem;
+            }
+        }
+
         html, body {
             overscroll-behavior: none;
             -webkit-overflow-scrolling: auto;
@@ -182,52 +250,54 @@
     <div class="container">
         <div class="heart"></div>
         <div class="question">我们和好吧？</div>
-        <div class="buttons">
-            <button class="yes-btn" id="yesBtn">和好 ❤️</button>
-            <button class="no-btn" id="noBtn">不和好 😠</button>
+        
+        <div class="buttons-container">
+            <div class="buttons">
+                <button class="no-btn" id="noBtn">不和好 😠</button>
+                <button class="yes-btn" id="yesBtn">和好 ❤️</button>
+            </div>
         </div>
+        
         <div class="message" id="message"></div>
+        <div class="branding">甜蜜互动 © 2023</div>
     </div>
 
     <script>
         const yesBtn = document.getElementById('yesBtn');
         const noBtn = document.getElementById('noBtn');
         const message = document.getElementById('message');
+        const buttonsContainer = document.querySelector('.buttons-container');
         const buttons = document.querySelector('.buttons');
         const container = document.querySelector('.container');
         let clickCount = 0;
         const maxClickCount = 4;
+        let isAnimating = false;
 
         // 点击"和好"按钮
         yesBtn.addEventListener('click', function() {
+            if(isAnimating) return;
+            isAnimating = true;
+            
             message.textContent = "你最好了！我爱你！❤️";
             message.style.opacity = '1';
             
-            // 创建彩色纸屑效果
             createConfetti();
-            
-            // 创建漂浮的爱心
             createFloatingHearts();
             
-            // 隐藏所有按钮
             document.querySelectorAll('.yes-btn, .no-btn').forEach(btn => {
                 btn.style.display = 'none';
             });
 
-            // 停止心跳动画
             document.querySelector('.heart').style.animation = 'none';
+            
+            trackEvent('和好成功');
         });
 
         // 点击"不和好"按钮
         noBtn.addEventListener('click', function() {
-            clickCount++;
+            if(isAnimating) return;
             
-            // 交换按钮位置
-            if (buttons.style.flexDirection === 'row-reverse') {
-                buttons.style.flexDirection = 'row';
-            } else {
-                buttons.style.flexDirection = 'row-reverse';
-            }
+            clickCount++;
             
             // 根据点击次数改变按钮文字和大小
             switch(clickCount) {
@@ -236,47 +306,63 @@
                     break;
                 case 2:
                     noBtn.textContent = "再考虑一下嘛 😢";
-                    noBtn.style.fontSize = '1.2em';
+                    noBtn.style.fontSize = '1.1rem';
                     break;
                 case 3:
                     noBtn.textContent = "求求你啦 🥺";
-                    noBtn.style.fontSize = '1.4em';
-                    noBtn.style.padding = '18px 40px';
+                    noBtn.style.fontSize = '1.3rem';
+                    noBtn.style.padding = '0.9rem 1.8rem';
                     break;
                 case maxClickCount:
-                    // 最后一次点击"不和好"的特殊处理
                     noBtn.style.display = 'none';
                     
-                    // 创建第二个和好按钮
                     const newYesBtn = yesBtn.cloneNode(true);
                     newYesBtn.id = 'yesBtn2';
                     newYesBtn.textContent = "和好 💕";
                     buttons.appendChild(newYesBtn);
                     
-                    // 为第二个和好按钮添加点击事件
                     newYesBtn.addEventListener('click', function() {
                         yesBtn.click();
                     });
                     
-                    // 修改第一个和好按钮的文字
                     yesBtn.textContent = "和好 ❤️";
+                    
+                    trackEvent('强制和好');
                     return;
             }
             
-            // 随机移动按钮位置（防止轻易点击）
+            // 点击后在框体内随机变换位置
             if (clickCount < maxClickCount) {
-                const maxX = container.offsetWidth - noBtn.offsetWidth;
-                const maxY = container.offsetHeight - noBtn.offsetHeight;
+                isAnimating = true;
+                noBtn.style.transition = 'all 0.5s cubic-bezier(0.25, 1.5, 0.5, 1)';
                 
+                // 临时改为绝对定位以便随机移动
                 noBtn.style.position = 'absolute';
-                noBtn.style.left = Math.random() * maxX + 'px';
-                noBtn.style.top = Math.random() * maxY + 'px';
+                
+                const containerRect = buttonsContainer.getBoundingClientRect();
+                const btnRect = noBtn.getBoundingClientRect();
+                
+                // 计算可移动范围（确保按钮完全在容器内）
+                const maxX = containerRect.width - btnRect.width;
+                const maxY = containerRect.height - btnRect.height;
+                
+                // 随机位置（确保不超出边界）
+                const randomX = Math.max(0, Math.min(maxX, Math.random() * maxX));
+                const randomY = Math.max(0, Math.min(maxY, Math.random() * maxY));
+                
+                noBtn.style.left = randomX + 'px';
+                noBtn.style.top = randomY + 'px';
+                
+                setTimeout(() => {
+                    isAnimating = false;
+                }, 500);
+                
+                trackEvent('拒绝和好-' + clickCount);
             }
         });
 
-        // 创建彩色纸屑效果
         function createConfetti() {
-            for (let i = 0; i < 120; i++) {
+            for (let i = 0; i < 150; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
                 confetti.style.left = Math.random() * 100 + 'vw';
@@ -290,9 +376,8 @@
             }
         }
 
-        // 创建漂浮的爱心
         function createFloatingHearts() {
-            for (let i = 0; i < 40; i++) {
+            for (let i = 0; i < 50; i++) {
                 const heart = document.createElement('div');
                 heart.className = 'floating-hearts';
                 heart.textContent = ['❤️', '💖', '💗', '💓', '💞', '💕'][Math.floor(Math.random() * 6)];
@@ -307,15 +392,19 @@
             }
         }
 
-        // 生成随机颜色
         function getRandomColor() {
             const colors = ['#ff3860', '#4CAF50', '#2196F3', '#FFC107', '#9C27B0', '#00BCD4'];
             return colors[Math.floor(Math.random() * colors.length)];
         }
+        
+        function trackEvent(eventName) {
+            console.log('Tracked event:', eventName);
+        }
 
-        // 防止触摸滑动
         document.addEventListener('touchmove', function(e) {
-            e.preventDefault();
+            if(isAnimating) {
+                e.preventDefault();
+            }
         }, { passive: false });
     </script>
 </body>
