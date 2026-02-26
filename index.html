@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#ff4d7d">
-    <title>情侣默契挑战 ❤️</title>
+    <meta name="theme-color" content="#e26d4a">
+    <title>双人趣味五子棋</title>
     <style>
+        @import url("https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&family=Source+Sans+3:wght@400;600;700&display=swap");
+
         :root {
-            --primary: #ff4d7d;
-            --primary-dark: #ec2f66;
-            --accent: #8c6bff;
-            --bg: linear-gradient(135deg, #ffdce7 0%, #f7e8ff 45%, #e4f0ff 100%);
-            --text: #2f2f39;
-            --muted: #73738a;
-            --card: rgba(255, 255, 255, 0.96);
+            --ink: #2b2a27;
+            --muted: #6b6a63;
+            --accent: #e26d4a;
+            --accent-dark: #bd4f2f;
+            --mint: #88c7b5;
         }
 
         * {
@@ -26,73 +26,170 @@
         body {
             width: 100%;
             min-height: 100%;
-            overscroll-behavior: none;
-            -webkit-overflow-scrolling: auto;
         }
 
         body {
-            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
-            color: var(--text);
-            background: var(--bg);
+            font-family: "Source Sans 3", "Noto Sans SC", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 12% 10%, rgba(255, 242, 220, 0.9), transparent 45%),
+                radial-gradient(circle at 90% 16%, rgba(180, 226, 213, 0.7), transparent 40%),
+                linear-gradient(135deg, #f9f2e5 0%, #ecf6f1 60%, #fff5ee 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
-            overflow: hidden;
+            padding: 1.5rem;
         }
 
-        .card {
-            width: min(94vw, 32rem);
-            min-height: 36rem;
-            background: var(--card);
-            border-radius: 1.25rem;
-            box-shadow: 0 1rem 2.2rem rgba(136, 108, 182, 0.22);
-            padding: 1.35rem;
-            position: relative;
-            overflow: hidden;
+        .page {
+            width: min(96vw, 760px);
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 1.4rem;
+            padding: 1.4rem 1.3rem 1.6rem;
+            box-shadow: 0 1.4rem 2.8rem rgba(77, 64, 49, 0.22);
             border: 1px solid rgba(255, 255, 255, 0.7);
+            animation: riseIn 0.6s ease both;
+            max-width: 760px;
+            margin: 0 auto;
         }
 
-        .top-badge {
-            display: inline-flex;
-            align-items: center;
+        .controls {
+            display: grid;
+            gap: 0.9rem;
+        }
+
+        .name-fields {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 0.7rem;
+        }
+
+        .field {
+            display: grid;
             gap: 0.35rem;
-            font-size: 0.85rem;
-            color: #fff;
-            padding: 0.32rem 0.7rem;
+        }
+
+        .field label {
+            font-size: 0.78rem;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+        }
+
+        .field input {
+            border: 1px solid #e7d7c0;
+            border-radius: 0.8rem;
+            padding: 0.6rem 0.75rem;
+            font-size: 0.95rem;
+            outline: none;
+            background: #fffdf9;
+        }
+
+        .field input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(226, 109, 74, 0.18);
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 0.6rem;
+        }
+
+        .btn {
+            border: none;
             border-radius: 999px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            margin-bottom: 1rem;
+            padding: 0.7rem 1rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
         }
 
-        .title {
-            font-size: 1.75rem;
-            line-height: 1.35;
-            color: var(--primary-dark);
-            font-weight: 800;
-            margin-bottom: 0.55rem;
+        .btn:active {
+            transform: scale(0.98);
         }
 
-        .desc {
-            font-size: 0.98rem;
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #f09a6e);
+            color: #fff;
+            box-shadow: 0 0.8rem 1.4rem rgba(226, 109, 74, 0.25);
+        }
+
+        .btn-ghost {
+            background: #f7efe4;
+            color: var(--accent-dark);
+        }
+
+        .status {
+            margin-top: 1rem;
+            padding: 0.85rem 1rem;
+            border-radius: 1rem;
+            background: #fff8ef;
+            border: 1px dashed #e9c8a8;
+            display: grid;
+            gap: 0.35rem;
+        }
+
+        .turn-text {
+            font-weight: 700;
+            color: var(--accent-dark);
+        }
+
+        .cursor-text {
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .board-wrap {
+            margin-top: 1rem;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 1.2rem;
+            background:
+                linear-gradient(145deg, #f2d6b3, #e6c197),
+                repeating-linear-gradient(0deg, rgba(126, 88, 53, 0.06) 0 1px, transparent 1px 12px),
+                repeating-linear-gradient(90deg, rgba(126, 88, 53, 0.06) 0 1px, transparent 1px 12px);
+            box-shadow: inset 0 0 0 1px rgba(111, 82, 50, 0.3), 0 1.2rem 1.8rem rgba(59, 42, 22, 0.22);
+            padding: 0.9rem;
+            max-width: 640px;
+            margin-left: auto;
+            margin-right: auto;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border-radius: 0.9rem;
+            background: transparent;
+        }
+
+        .tips {
+            margin-top: 0.9rem;
+            font-size: 0.9rem;
             color: var(--muted);
             line-height: 1.6;
-            margin-bottom: 1rem;
         }
 
-        .section {
-            display: none;
-            animation: fadeIn 0.35s ease;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
+        @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(8px);
+                transform: translateX(-16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes riseIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
             }
             to {
                 opacity: 1;
@@ -100,572 +197,360 @@
             }
         }
 
-        .heart {
-            width: 5.8rem;
-            height: 5.2rem;
-            margin: 0.6rem auto 1.2rem;
-            position: relative;
-            animation: beat 1.2s infinite;
-        }
-
-        .heart:before,
-        .heart:after {
-            content: "";
-            position: absolute;
-            top: 0;
-            width: 2.9rem;
-            height: 4.7rem;
-            background: var(--primary);
-            border-radius: 2.9rem 2.9rem 0 0;
-        }
-
-        .heart:before {
-            left: 2.9rem;
-            transform: rotate(-45deg);
-            transform-origin: 0 100%;
-        }
-
-        .heart:after {
-            left: 0;
-            transform: rotate(45deg);
-            transform-origin: 100% 100%;
-        }
-
-        @keyframes beat {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-            25% {
-                transform: scale(1.18);
-            }
-            50% {
-                transform: scale(1);
-            }
-        }
-
-        .name-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.65rem;
-            margin-bottom: 1rem;
-        }
-
-        .input {
-            width: 100%;
-            border: 1px solid #e7dff0;
-            border-radius: 0.8rem;
-            padding: 0.7rem 0.85rem;
-            font-size: 0.95rem;
-            color: var(--text);
-            background: #fff;
-            outline: none;
-        }
-
-        .input:focus {
-            border-color: #d8b9ff;
-            box-shadow: 0 0 0 3px rgba(216, 185, 255, 0.18);
-        }
-
-        .btn {
-            width: 100%;
-            border: none;
-            border-radius: 999px;
-            padding: 0.82rem 1rem;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.18s, box-shadow 0.18s;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn-main {
-            color: #fff;
-            background: linear-gradient(135deg, var(--primary), #ff7ea1);
-            box-shadow: 0 0.7rem 1.4rem rgba(255, 77, 125, 0.3);
-        }
-
-        .btn-sub {
-            color: #564f66;
-            background: #f3ecff;
-            margin-top: 0.55rem;
-        }
-
-        .progress {
-            margin: 0.2rem 0 1rem;
-        }
-
-        .progress-text {
-            font-size: 0.9rem;
-            color: var(--muted);
-            margin-bottom: 0.4rem;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .bar {
-            width: 100%;
-            height: 0.5rem;
-            border-radius: 999px;
-            background: #f1e8fb;
-            overflow: hidden;
-        }
-
-        .bar-fill {
-            height: 100%;
-            width: 0;
-            background: linear-gradient(90deg, var(--accent), var(--primary));
-            transition: width 0.25s;
-        }
-
-        .question {
-            background: #fff;
-            border: 1px solid #f0e8fb;
-            border-radius: 1rem;
-            padding: 1rem;
-            font-size: 1.15rem;
-            line-height: 1.5;
-            margin-bottom: 0.85rem;
-            min-height: 5.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        .turn {
-            font-size: 0.95rem;
-            text-align: center;
-            color: #6f6389;
-            margin-bottom: 0.8rem;
-            min-height: 1.4rem;
-            font-weight: 600;
-        }
-
-        .choices {
-            display: grid;
-            gap: 0.65rem;
-            margin-bottom: 0.7rem;
-        }
-
-        .choice-btn {
-            border: 1px solid #ebdff8;
-            background: #fff;
-            color: var(--text);
-            border-radius: 0.95rem;
-            font-size: 1rem;
-            padding: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: left;
-            transition: 0.18s;
-        }
-
-        .choice-btn:hover {
-            border-color: #cfa8ff;
-            transform: translateY(-2px);
-        }
-
-        .tip {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #8e84a2;
-        }
-
-        .score {
-            margin-top: 0.45rem;
-            background: #fff;
-            border: 1px dashed #edc9d7;
-            border-radius: 1rem;
-            text-align: center;
-            padding: 1rem;
-        }
-
-        .score-num {
-            font-size: 2.1rem;
-            color: var(--primary-dark);
-            font-weight: 800;
-            line-height: 1.2;
-        }
-
-        .result-title {
-            margin-top: 0.9rem;
-            font-size: 1.28rem;
-            color: #51496a;
-            font-weight: 700;
-            text-align: center;
-        }
-
-        .result-desc {
-            margin-top: 0.45rem;
-            color: #746a89;
-            line-height: 1.7;
-            text-align: center;
-            min-height: 3.4rem;
-            font-size: 0.95rem;
-        }
-
-        .answer-list {
-            margin-top: 0.95rem;
-            border-radius: 0.9rem;
-            background: #fff;
-            border: 1px solid #efe6fa;
-            max-height: 8.9rem;
-            overflow: auto;
-            padding: 0.6rem;
-        }
-
-        .answer-item {
-            font-size: 0.86rem;
-            color: #645b79;
-            padding: 0.45rem;
-            border-radius: 0.55rem;
-        }
-
-        .answer-item + .answer-item {
-            margin-top: 0.4rem;
-            border-top: 1px solid #f4eefa;
-        }
-
-        .good {
-            color: #1f9b63;
-            font-weight: 700;
-        }
-
-        .bad {
-            color: #d93b6d;
-            font-weight: 700;
-        }
-
-        .float-heart {
-            position: fixed;
-            pointer-events: none;
-            font-size: 1.35rem;
-            opacity: 0;
-            animation: floatUp 2.8s linear forwards;
-            z-index: 0;
-        }
-
-        @keyframes floatUp {
-            0% {
-                transform: translateY(0) scale(0.9);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-68vh) scale(1.25) rotate(18deg);
-                opacity: 0;
-            }
-        }
-
-        .footer {
-            text-align: center;
-            font-size: 0.8rem;
-            color: rgba(72, 52, 100, 0.45);
-            margin-top: 0.8rem;
-        }
-
-        @media (max-width: 420px) {
-            .card {
-                min-height: 35.2rem;
+        @media (max-width: 720px) {
+            body {
                 padding: 1rem;
-            }
-
-            .title {
-                font-size: 1.55rem;
-            }
-
-            .question {
-                font-size: 1.05rem;
-            }
-
-            .choice-btn {
-                font-size: 0.95rem;
             }
         }
     </style>
 </head>
 <body>
-    <main class="card">
-        <section id="startSection" class="section active">
-            <div class="top-badge">💑 情侣互动小游戏</div>
-            <div class="heart"></div>
-            <h1 class="title">心动默契挑战</h1>
-            <p class="desc">两个人轮流答题，看看你们到底有多懂彼此。每题同选得分，分数越高默契越高。</p>
-            <div class="name-row">
-                <input id="nameA" class="input" maxlength="10" placeholder="玩家A昵称（可选）">
-                <input id="nameB" class="input" maxlength="10" placeholder="玩家B昵称（可选）">
-            </div>
-            <button id="startBtn" class="btn btn-main">开始挑战</button>
-            <p class="tip" style="margin-top: 0.6rem;">答题时建议彼此不要偷看哦 ✨</p>
-            <div class="footer">今天也要好好相爱</div>
-        </section>
-
-        <section id="gameSection" class="section">
-            <div class="top-badge">🎮 进行中</div>
-            <div class="progress">
-                <div class="progress-text">
-                    <span id="progressLabel">第 1 / 6 题</span>
-                    <span id="scoreLabel">当前分数 0</span>
+    <div class="page">
+        <section class="panel">
+            <div class="controls">
+                <div class="name-fields">
+                    <div class="field">
+                        <label for="nameA">玩家A（鼠标）</label>
+                        <input id="nameA" maxlength="10" placeholder="请输入昵称">
+                    </div>
+                    <div class="field">
+                        <label for="nameB">玩家B（键盘）</label>
+                        <input id="nameB" maxlength="10" placeholder="请输入昵称">
+                    </div>
                 </div>
-                <div class="bar">
-                    <div id="barFill" class="bar-fill"></div>
+                <div class="buttons">
+                    <button id="undoBtn" class="btn btn-ghost" type="button">悔棋</button>
+                    <button id="restartBtn" class="btn btn-primary" type="button">重开一局</button>
                 </div>
             </div>
-            <div id="questionText" class="question"></div>
-            <div id="turnText" class="turn"></div>
-            <div id="choices" class="choices"></div>
-            <p class="tip" id="tipText">同一题两个人都答完才会进入下一题</p>
-        </section>
 
-        <section id="resultSection" class="section">
-            <div class="top-badge">🏆 挑战完成</div>
-            <h2 class="title" style="margin-bottom:0.2rem;">默契结果</h2>
-            <div class="score">
-                <div id="scoreNum" class="score-num">0</div>
-                <div id="scoreText" class="desc" style="margin:0.35rem 0 0;">总分 / 120</div>
+            <div class="status">
+                <div id="turnText" class="turn-text">准备就绪</div>
+                <div id="cursorText" class="cursor-text">准星坐标：--</div>
             </div>
-            <div id="resultTitle" class="result-title"></div>
-            <div id="resultDesc" class="result-desc"></div>
-            <div id="answerList" class="answer-list"></div>
-            <button id="restartBtn" class="btn btn-main" style="margin-top: 0.9rem;">再玩一次</button>
-            <button id="copyBtn" class="btn btn-sub">复制结果文案</button>
-            <div class="footer">幸福是双向奔赴</div>
+
+            <div class="board-wrap">
+                <canvas id="board" aria-label="五子棋棋盘"></canvas>
+            </div>
+
+            <div class="tips">
+                玩家A回合：仅鼠标生效，键盘被禁用。<br>
+                玩家B回合：方向键移动准星，回车/空格落子，坐标实时刷新。
+            </div>
         </section>
-    </main>
+    </div>
 
     <script>
-        const QUESTIONS = [
-            {
-                text: "周末更想怎么约会？",
-                options: ["宅家看电影", "出门逛吃打卡"]
-            },
-            {
-                text: "如果对方不开心，你会先？",
-                options: ["先抱抱安慰", "先问清原因"]
-            },
-            {
-                text: "纪念日礼物偏好是？",
-                options: ["实用型礼物", "仪式感惊喜"]
-            },
-            {
-                text: "旅行会选哪种节奏？",
-                options: ["慢慢走慢慢拍", "高效打卡冲景点"]
-            },
-            {
-                text: "吵架后更希望怎么和好？",
-                options: ["当晚就说开", "冷静后再聊"]
-            },
-            {
-                text: "未来最想一起做的事？",
-                options: ["养一只宠物", "一起环游旅行"]
-            }
-        ];
+        const boardSize = 15;
+        const board = Array.from({ length: boardSize }, () => Array(boardSize).fill(0));
+        const moveHistory = [];
 
-        const state = {
-            names: ["玩家A", "玩家B"],
-            currentIndex: 0,
-            phase: 0,
-            score: 0,
-            answersA: [],
-            answersB: [],
-            detail: []
-        };
-
-        const startSection = document.getElementById("startSection");
-        const gameSection = document.getElementById("gameSection");
-        const resultSection = document.getElementById("resultSection");
-
+        const canvas = document.getElementById("board");
+        const ctx = canvas.getContext("2d");
+        const turnText = document.getElementById("turnText");
+        const cursorText = document.getElementById("cursorText");
+        const undoBtn = document.getElementById("undoBtn");
+        const restartBtn = document.getElementById("restartBtn");
         const nameAInput = document.getElementById("nameA");
         const nameBInput = document.getElementById("nameB");
 
-        const progressLabel = document.getElementById("progressLabel");
-        const scoreLabel = document.getElementById("scoreLabel");
-        const barFill = document.getElementById("barFill");
-        const questionText = document.getElementById("questionText");
-        const turnText = document.getElementById("turnText");
-        const choicesEl = document.getElementById("choices");
-        const tipText = document.getElementById("tipText");
+        let canvasSize = 0;
+        let padding = 24;
+        let cellSize = 0;
+        let currentPlayer = 1;
+        let winner = 0;
+        let cursor = { x: 7, y: 7 };
 
-        const scoreNum = document.getElementById("scoreNum");
-        const scoreText = document.getElementById("scoreText");
-        const resultTitle = document.getElementById("resultTitle");
-        const resultDesc = document.getElementById("resultDesc");
-        const answerList = document.getElementById("answerList");
+        const getName = (player) => {
+            const fallback = player === 1 ? "玩家A" : "玩家B";
+            const input = player === 1 ? nameAInput.value.trim() : nameBInput.value.trim();
+            return input || fallback;
+        };
 
-        document.getElementById("startBtn").addEventListener("click", startGame);
-        document.getElementById("restartBtn").addEventListener("click", resetGame);
-        document.getElementById("copyBtn").addEventListener("click", copySummary);
+        const clampCursor = () => {
+            cursor.x = Math.max(0, Math.min(boardSize - 1, cursor.x));
+            cursor.y = Math.max(0, Math.min(boardSize - 1, cursor.y));
+        };
 
-        function startGame() {
-            const nameA = nameAInput.value.trim();
-            const nameB = nameBInput.value.trim();
-            state.names[0] = nameA || "玩家A";
-            state.names[1] = nameB || "玩家B";
-            showSection("game");
-            renderQuestion();
-        }
+        const resizeCanvas = () => {
+            const wrap = canvas.parentElement;
+            const wrapStyle = window.getComputedStyle(wrap);
+            const horizontalPadding = parseFloat(wrapStyle.paddingLeft) + parseFloat(wrapStyle.paddingRight);
+            const availableSize = wrap.clientWidth - horizontalPadding;
+            const size = Math.min(580, Math.max(200, availableSize));
+            const dpr = window.devicePixelRatio || 1;
 
-        function showSection(target) {
-            startSection.classList.remove("active");
-            gameSection.classList.remove("active");
-            resultSection.classList.remove("active");
-            if (target === "start") startSection.classList.add("active");
-            if (target === "game") gameSection.classList.add("active");
-            if (target === "result") resultSection.classList.add("active");
-        }
+            canvasSize = size;
+            canvas.style.width = `${size}px`;
+            canvas.style.height = `${size}px`;
+            canvas.width = Math.floor(size * dpr);
+            canvas.height = Math.floor(size * dpr);
 
-        function renderQuestion() {
-            const question = QUESTIONS[state.currentIndex];
-            const total = QUESTIONS.length;
-            questionText.textContent = question.text;
-            progressLabel.textContent = `第 ${state.currentIndex + 1} / ${total} 题`;
-            scoreLabel.textContent = `当前分数 ${state.score}`;
-            barFill.style.width = `${(state.currentIndex / total) * 100}%`;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            padding = Math.max(10, size * 0.035);
+            cellSize = (size - padding * 2) / (boardSize - 1);
 
-            const currentPlayer = state.phase === 0 ? state.names[0] : state.names[1];
-            turnText.textContent = `${currentPlayer} 请选择你的答案`;
-            tipText.textContent = state.phase === 0
-                ? `${state.names[1]} 暂时别看屏幕 👀`
-                : `${state.names[0]} 已作答，轮到 ${state.names[1]} 了`;
+            drawBoard();
+        };
 
-            choicesEl.innerHTML = "";
-            question.options.forEach((option, index) => {
-                const button = document.createElement("button");
-                button.className = "choice-btn";
-                button.textContent = `${String.fromCharCode(65 + index)}. ${option}`;
-                button.addEventListener("click", () => selectAnswer(index));
-                choicesEl.appendChild(button);
-            });
-        }
+        const drawBoard = () => {
+            ctx.clearRect(0, 0, canvasSize, canvasSize);
 
-        function selectAnswer(optionIndex) {
-            const question = QUESTIONS[state.currentIndex];
+            ctx.strokeStyle = "rgba(89, 65, 44, 0.65)";
+            ctx.lineWidth = 1;
+            for (let i = 0; i < boardSize; i += 1) {
+                const offset = padding + i * cellSize;
+                ctx.beginPath();
+                ctx.moveTo(padding, offset);
+                ctx.lineTo(canvasSize - padding, offset);
+                ctx.stroke();
 
-            if (state.phase === 0) {
-                state.answersA[state.currentIndex] = optionIndex;
-                state.phase = 1;
-                renderQuestion();
-                return;
+                ctx.beginPath();
+                ctx.moveTo(offset, padding);
+                ctx.lineTo(offset, canvasSize - padding);
+                ctx.stroke();
             }
 
-            state.answersB[state.currentIndex] = optionIndex;
-            const answerA = state.answersA[state.currentIndex];
-            const answerB = state.answersB[state.currentIndex];
-            const isMatch = answerA === answerB;
-            if (isMatch) {
-                state.score += 20;
-                burstHearts();
-            }
-
-            state.detail.push({
-                q: question.text,
-                a: question.options[answerA],
-                b: question.options[answerB],
-                match: isMatch
-            });
-
-            state.currentIndex += 1;
-            state.phase = 0;
-
-            if (state.currentIndex >= QUESTIONS.length) {
-                showResult();
-                return;
-            }
-
-            renderQuestion();
-        }
-
-        function showResult() {
-            showSection("result");
-            const totalScore = state.score;
-            scoreNum.textContent = totalScore;
-            scoreText.textContent = `总分 / ${QUESTIONS.length * 20}`;
-
-            let title = "心有灵犀";
-            let desc = "你们的频率非常接近，很多时刻都能想到一起，继续保持这份默契和沟通吧。";
-
-            if (totalScore < 40) {
-                title = "甜蜜磨合期";
-                desc = "你们风格不同但很互补，多聊聊彼此偏好，默契会快速上升。";
-            } else if (totalScore < 80) {
-                title = "温柔同步中";
-                desc = "已经有稳定默契了，再多一点表达和倾听，会更懂对方。";
-            } else if (totalScore < 120) {
-                title = "高甜搭档";
-                desc = "你们在关键选择上很一致，是很会经营关系的一对。";
-            }
-
-            resultTitle.textContent = `${title} · ${state.names[0]} & ${state.names[1]}`;
-            resultDesc.textContent = desc;
-
-            answerList.innerHTML = "";
-            state.detail.forEach((item, idx) => {
-                const row = document.createElement("div");
-                row.className = "answer-item";
-                const statusClass = item.match ? "good" : "bad";
-                const statusText = item.match ? "默契+20" : "本题未同选";
-                row.innerHTML = `${idx + 1}. ${item.q}<br>${state.names[0]}：${item.a} ｜ ${state.names[1]}：${item.b} · <span class="${statusClass}">${statusText}</span>`;
-                answerList.appendChild(row);
-            });
-
-            barFill.style.width = "100%";
-            burstHearts(45);
-        }
-
-        function resetGame() {
-            state.currentIndex = 0;
-            state.phase = 0;
-            state.score = 0;
-            state.answersA = [];
-            state.answersB = [];
-            state.detail = [];
-            showSection("start");
-        }
-
-        function copySummary() {
-            const summary = `我们刚玩了情侣默契挑战：${state.names[0]} & ${state.names[1]} 得分 ${state.score}/${QUESTIONS.length * 20}，结果是“${resultTitle.textContent}”。`;
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(summary).then(() => {
-                    alert("结果文案已复制");
-                }).catch(() => {
-                    fallbackCopy(summary);
+            const starPoints = [3, 7, 11];
+            ctx.fillStyle = "rgba(60, 42, 24, 0.7)";
+            starPoints.forEach((row) => {
+                starPoints.forEach((col) => {
+                    const x = padding + col * cellSize;
+                    const y = padding + row * cellSize;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 3.2, 0, Math.PI * 2);
+                    ctx.fill();
                 });
+            });
+
+            drawPieces();
+            drawCursor();
+        };
+
+        const drawPieces = () => {
+            for (let row = 0; row < boardSize; row += 1) {
+                for (let col = 0; col < boardSize; col += 1) {
+                    const player = board[row][col];
+                    if (!player) continue;
+
+                    const x = padding + col * cellSize;
+                    const y = padding + row * cellSize;
+                    ctx.beginPath();
+                    ctx.arc(x, y, cellSize * 0.42, 0, Math.PI * 2);
+                    ctx.shadowColor = "rgba(58, 40, 20, 0.35)";
+                    ctx.shadowBlur = 6;
+                    ctx.shadowOffsetY = 2;
+                    ctx.fillStyle = player === 1 ? "#2b2a27" : "#fff9f2";
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = player === 1 ? "#1b1a18" : "#c9b8a6";
+                    ctx.stroke();
+                }
+            }
+
+            if (moveHistory.length) {
+                const last = moveHistory[moveHistory.length - 1];
+                const x = padding + last.col * cellSize;
+                const y = padding + last.row * cellSize;
+                ctx.beginPath();
+                ctx.arc(x, y, cellSize * 0.16, 0, Math.PI * 2);
+                ctx.fillStyle = last.player === 1 ? "#f3c15b" : "#d26c4a";
+                ctx.fill();
+            }
+        };
+
+        const drawCursor = () => {
+            if (currentPlayer !== 2 || winner) return;
+
+            const x = padding + cursor.x * cellSize;
+            const y = padding + cursor.y * cellSize;
+            ctx.strokeStyle = "#bd4f2f";
+            ctx.lineWidth = 2;
+
+            ctx.beginPath();
+            ctx.arc(x, y, cellSize * 0.46, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(x - cellSize * 0.55, y);
+            ctx.lineTo(x + cellSize * 0.55, y);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(x, y - cellSize * 0.55);
+            ctx.lineTo(x, y + cellSize * 0.55);
+            ctx.stroke();
+        };
+
+        const updateStatus = () => {
+            if (winner) {
+                turnText.textContent = `${getName(winner)} 获胜！`;
             } else {
-                fallbackCopy(summary);
+                const playerName = getName(currentPlayer);
+                const inputTip = currentPlayer === 1 ? "鼠标落子" : "键盘落子";
+                turnText.textContent = `${playerName} 回合（${inputTip}）`;
             }
-        }
 
-        function fallbackCopy(text) {
-            const textarea = document.createElement("textarea");
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            try {
-                document.execCommand("copy");
-                alert("结果文案已复制");
-            } catch (e) {
-                alert("复制失败，请手动复制");
+            if (currentPlayer === 2 && !winner) {
+                cursorText.textContent = `准星坐标：${cursor.x + 1}，${cursor.y + 1}`;
+            } else {
+                cursorText.textContent = "准星坐标：--";
             }
-            textarea.remove();
-        }
+        };
 
-        function burstHearts(count = 18) {
-            const icons = ["💗", "💖", "💕", "💘", "💞"];
-            for (let i = 0; i < count; i++) {
-                const heart = document.createElement("div");
-                heart.className = "float-heart";
-                heart.textContent = icons[Math.floor(Math.random() * icons.length)];
-                heart.style.left = Math.random() * 100 + "vw";
-                heart.style.bottom = "-2rem";
-                heart.style.animationDuration = (Math.random() * 1.2 + 1.9) + "s";
-                heart.style.fontSize = (Math.random() * 0.8 + 1) + "rem";
-                document.body.appendChild(heart);
-                setTimeout(() => heart.remove(), 3200);
+        const checkWin = (row, col, player) => {
+            const directions = [
+                [1, 0],
+                [0, 1],
+                [1, 1],
+                [1, -1]
+            ];
+
+            return directions.some(([dx, dy]) => {
+                let count = 1;
+                let r = row + dy;
+                let c = col + dx;
+
+                while (r >= 0 && r < boardSize && c >= 0 && c < boardSize && board[r][c] === player) {
+                    count += 1;
+                    r += dy;
+                    c += dx;
+                }
+
+                r = row - dy;
+                c = col - dx;
+                while (r >= 0 && r < boardSize && c >= 0 && c < boardSize && board[r][c] === player) {
+                    count += 1;
+                    r -= dy;
+                    c -= dx;
+                }
+
+                return count >= 5;
+            });
+        };
+
+        const placePiece = (row, col, player) => {
+            if (winner || board[row][col] !== 0) return false;
+
+            board[row][col] = player;
+            moveHistory.push({ row, col, player });
+
+            if (checkWin(row, col, player)) {
+                winner = player;
+            } else {
+                currentPlayer = player === 1 ? 2 : 1;
             }
-        }
+
+            updateStatus();
+            drawBoard();
+            return true;
+        };
+
+        const getCellFromPosition = (clientX, clientY) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+            const col = Math.round((x - padding) / cellSize);
+            const row = Math.round((y - padding) / cellSize);
+
+            if (row < 0 || row >= boardSize || col < 0 || col >= boardSize) return null;
+
+            const snapX = padding + col * cellSize;
+            const snapY = padding + row * cellSize;
+            const distance = Math.hypot(x - snapX, y - snapY);
+            if (distance > cellSize * 0.45) return null;
+
+            return { row, col };
+        };
+
+        canvas.addEventListener("click", (event) => {
+            if (currentPlayer !== 1 || winner) return;
+
+            const cell = getCellFromPosition(event.clientX, event.clientY);
+            if (!cell) return;
+            placePiece(cell.row, cell.col, 1);
+        });
+
+        document.addEventListener("keydown", (event) => {
+            const activeTag = document.activeElement?.tagName;
+            if (activeTag === "INPUT" || activeTag === "TEXTAREA") return;
+
+            const key = event.key;
+            const isBoardKey = key === "ArrowUp" || key === "ArrowDown" || key === "ArrowLeft" || key === "ArrowRight" || key === "Enter" || key === " ";
+
+            if (!isBoardKey || winner) return;
+
+            if (currentPlayer !== 2) {
+                event.preventDefault();
+                return;
+            }
+
+            let moved = false;
+            if (key === "ArrowUp") {
+                cursor.y -= 1;
+                moved = true;
+            } else if (key === "ArrowDown") {
+                cursor.y += 1;
+                moved = true;
+            } else if (key === "ArrowLeft") {
+                cursor.x -= 1;
+                moved = true;
+            } else if (key === "ArrowRight") {
+                cursor.x += 1;
+                moved = true;
+            } else if (key === "Enter" || key === " ") {
+                event.preventDefault();
+                placePiece(cursor.y, cursor.x, 2);
+                return;
+            }
+
+            if (moved) {
+                event.preventDefault();
+                clampCursor();
+                updateStatus();
+                drawBoard();
+            }
+        });
+
+        undoBtn.addEventListener("click", () => {
+            if (!moveHistory.length) return;
+
+            const last = moveHistory.pop();
+            board[last.row][last.col] = 0;
+            winner = 0;
+            currentPlayer = last.player;
+
+            if (currentPlayer === 2) {
+                cursor.x = last.col;
+                cursor.y = last.row;
+            }
+
+            clampCursor();
+            updateStatus();
+            drawBoard();
+        });
+
+        restartBtn.addEventListener("click", () => {
+            for (let row = 0; row < boardSize; row += 1) {
+                board[row].fill(0);
+            }
+
+            moveHistory.length = 0;
+            currentPlayer = 1;
+            winner = 0;
+            cursor = { x: 7, y: 7 };
+
+            updateStatus();
+            drawBoard();
+        });
+
+        nameAInput.addEventListener("input", updateStatus);
+        nameBInput.addEventListener("input", updateStatus);
+
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+        updateStatus();
     </script>
 </body>
 </html>
