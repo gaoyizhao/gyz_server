@@ -125,35 +125,45 @@
 
         .status {
             margin-top: 1rem;
-            padding: 0.85rem 1rem;
+            padding: 0.7rem 0.9rem;
             border-radius: 1rem;
             background: #fff8ef;
             border: 1px dashed #e9c8a8;
             display: grid;
-            gap: 0.35rem;
+            gap: 0.2rem;
         }
 
         .turn-text {
+            font-size: 0.92rem;
             font-weight: 700;
             color: var(--accent-dark);
         }
 
         .cursor-text {
-            font-size: 0.9rem;
+            font-size: 0.84rem;
             color: var(--muted);
+        }
+
+        .score-text {
+            font-size: 0.84rem;
+            color: var(--muted);
+            font-weight: 600;
         }
 
         .board-wrap {
             margin-top: 1rem;
             width: 100%;
             aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             border-radius: 1.2rem;
             background:
                 linear-gradient(145deg, #f2d6b3, #e6c197),
                 repeating-linear-gradient(0deg, rgba(126, 88, 53, 0.06) 0 1px, transparent 1px 12px),
                 repeating-linear-gradient(90deg, rgba(126, 88, 53, 0.06) 0 1px, transparent 1px 12px);
             box-shadow: inset 0 0 0 1px rgba(111, 82, 50, 0.3), 0 1.2rem 1.8rem rgba(59, 42, 22, 0.22);
-            padding: 0.9rem;
+            padding: 0;
             max-width: 640px;
             margin-left: auto;
             margin-right: auto;
@@ -225,6 +235,7 @@
             </div>
 
             <div class="status">
+                <div id="scoreText" class="score-text">胜场：玩家A 0 - 玩家B 0</div>
                 <div id="turnText" class="turn-text">准备就绪</div>
                 <div id="cursorText" class="cursor-text">准星坐标：--</div>
             </div>
@@ -249,6 +260,7 @@
         const ctx = canvas.getContext("2d");
         const turnText = document.getElementById("turnText");
         const cursorText = document.getElementById("cursorText");
+        const scoreText = document.getElementById("scoreText");
         const undoBtn = document.getElementById("undoBtn");
         const restartBtn = document.getElementById("restartBtn");
         const nameAInput = document.getElementById("nameA");
@@ -260,6 +272,11 @@
         let currentPlayer = 1;
         let winner = 0;
         let cursor = { x: 7, y: 7 };
+        let winsA = 0;
+        let winsB = 0;
+        let isAnimatingClear = false;
+        let clearAnimationProgress = 0;
+        const outerMarginCells = 0.45;
 
         const getName = (player) => {
             const fallback = player === 1 ? "玩家A" : "玩家B";
@@ -276,19 +293,24 @@
             const wrap = canvas.parentElement;
             const wrapStyle = window.getComputedStyle(wrap);
             const horizontalPadding = parseFloat(wrapStyle.paddingLeft) + parseFloat(wrapStyle.paddingRight);
-            const availableSize = wrap.clientWidth - horizontalPadding;
-            const size = Math.min(580, Math.max(200, availableSize));
+            const verticalPadding = parseFloat(wrapStyle.paddingTop) + parseFloat(wrapStyle.paddingBottom);
+            const availableWidth = wrap.clientWidth - horizontalPadding;
+            const availableHeight = wrap.clientHeight - verticalPadding;
+            const targetSize = Math.min(620, Math.max(200, Math.min(availableWidth, availableHeight)));
             const dpr = window.devicePixelRatio || 1;
+            const backingSize = Math.round(targetSize * dpr);
+            const renderSize = backingSize / dpr;
 
-            canvasSize = size;
-            canvas.style.width = `${size}px`;
-            canvas.style.height = `${size}px`;
-            canvas.width = Math.floor(size * dpr);
-            canvas.height = Math.floor(size * dpr);
+            canvasSize = renderSize;
+            canvas.style.width = `${renderSize}px`;
+            canvas.style.height = `${renderSize}px`;
+            canvas.width = backingSize;
+            canvas.height = backingSize;
 
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            padding = Math.max(10, size * 0.035);
-            cellSize = (size - padding * 2) / (boardSize - 1);
+            const spanInCells = (boardSize - 1) + outerMarginCells * 2;
+            cellSize = canvasSize / spanInCells;
+            padding = outerMarginCells * cellSize;
 
             drawBoard();
         };
@@ -328,6 +350,10 @@
         };
 
         const drawPieces = () => {
+            const pieceAlpha = isAnimatingClear ? Math.max(0, 1 - clearAnimationProgress) : 1;
+            ctx.save();
+            ctx.globalAlpha = pieceAlpha;
+
             for (let row = 0; row < boardSize; row += 1) {
                 for (let col = 0; col < boardSize; col += 1) {
                     const player = board[row][col];
@@ -358,6 +384,8 @@
                 ctx.fillStyle = last.player === 1 ? "#f3c15b" : "#d26c4a";
                 ctx.fill();
             }
+
+            ctx.restore();
         };
 
         const drawCursor = () => {
@@ -397,6 +425,8 @@
             } else {
                 cursorText.textContent = "准星坐标：--";
             }
+
+            scoreText.textContent = `胜场：${getName(1)} ${winsA} - ${getName(2)} ${winsB}`;
         };
 
         const checkWin = (row, col, player) => {
@@ -431,13 +461,19 @@
         };
 
         const placePiece = (row, col, player) => {
-            if (winner || board[row][col] !== 0) return false;
+            if (winner || isAnimatingClear || board[row][col] !== 0) return false;
 
             board[row][col] = player;
             moveHistory.push({ row, col, player });
 
             if (checkWin(row, col, player)) {
                 winner = player;
+                if (player === 1) {
+                    winsA += 1;
+                } else {
+                    winsB += 1;
+                }
+                startClearAnimation();
             } else {
                 currentPlayer = player === 1 ? 2 : 1;
             }
@@ -445,6 +481,43 @@
             updateStatus();
             drawBoard();
             return true;
+        };
+
+        const clearBoardForNextRound = () => {
+            for (let row = 0; row < boardSize; row += 1) {
+                board[row].fill(0);
+            }
+
+            moveHistory.length = 0;
+            currentPlayer = 1;
+            winner = 0;
+            cursor = { x: 7, y: 7 };
+        };
+
+        const startClearAnimation = () => {
+            isAnimatingClear = true;
+            clearAnimationProgress = 0;
+            const duration = 750;
+            const startTime = performance.now();
+
+            const step = (now) => {
+                const elapsed = now - startTime;
+                clearAnimationProgress = Math.min(1, elapsed / duration);
+                drawBoard();
+
+                if (clearAnimationProgress < 1) {
+                    requestAnimationFrame(step);
+                    return;
+                }
+
+                isAnimatingClear = false;
+                clearAnimationProgress = 0;
+                clearBoardForNextRound();
+                updateStatus();
+                drawBoard();
+            };
+
+            requestAnimationFrame(step);
         };
 
         const getCellFromPosition = (clientX, clientY) => {
@@ -465,7 +538,7 @@
         };
 
         canvas.addEventListener("click", (event) => {
-            if (currentPlayer !== 1 || winner) return;
+            if (isAnimatingClear || currentPlayer !== 1 || winner) return;
 
             const cell = getCellFromPosition(event.clientX, event.clientY);
             if (!cell) return;
@@ -479,7 +552,12 @@
             const key = event.key;
             const isBoardKey = key === "ArrowUp" || key === "ArrowDown" || key === "ArrowLeft" || key === "ArrowRight" || key === "Enter" || key === " ";
 
-            if (!isBoardKey || winner) return;
+            if (!isBoardKey) return;
+
+            if (winner || isAnimatingClear) {
+                event.preventDefault();
+                return;
+            }
 
             if (currentPlayer !== 2) {
                 event.preventDefault();
@@ -514,10 +592,21 @@
         });
 
         undoBtn.addEventListener("click", () => {
-            if (!moveHistory.length) return;
+            if (isAnimatingClear || !moveHistory.length) return;
+
+            const wasWinningMove = winner !== 0;
 
             const last = moveHistory.pop();
             board[last.row][last.col] = 0;
+
+            if (wasWinningMove) {
+                if (last.player === 1) {
+                    winsA = Math.max(0, winsA - 1);
+                } else {
+                    winsB = Math.max(0, winsB - 1);
+                }
+            }
+
             winner = 0;
             currentPlayer = last.player;
 
@@ -532,6 +621,8 @@
         });
 
         restartBtn.addEventListener("click", () => {
+            isAnimatingClear = false;
+            clearAnimationProgress = 0;
             for (let row = 0; row < boardSize; row += 1) {
                 board[row].fill(0);
             }
@@ -540,6 +631,8 @@
             currentPlayer = 1;
             winner = 0;
             cursor = { x: 7, y: 7 };
+            winsA = 0;
+            winsB = 0;
 
             updateStatus();
             drawBoard();
