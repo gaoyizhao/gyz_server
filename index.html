@@ -252,7 +252,7 @@
     </div>
 
     <script>
-        const boardSize = 15;
+        const boardSize = 17;
         const board = Array.from({ length: boardSize }, () => Array(boardSize).fill(0));
         const moveHistory = [];
 
@@ -271,7 +271,7 @@
         let cellSize = 0;
         let currentPlayer = 1;
         let winner = 0;
-        let cursor = { x: 7, y: 7 };
+        let cursor = { x: Math.floor(boardSize / 2), y: Math.floor(boardSize / 2) };
         let winsA = 0;
         let winsB = 0;
         let isAnimatingClear = false;
@@ -333,7 +333,7 @@
                 ctx.stroke();
             }
 
-            const starPoints = [3, 7, 11];
+            const starPoints = [3, Math.floor(boardSize / 2), boardSize - 4];
             ctx.fillStyle = "rgba(60, 42, 24, 0.7)";
             starPoints.forEach((row) => {
                 starPoints.forEach((col) => {
@@ -507,7 +507,7 @@
             moveHistory.length = 0;
             currentPlayer = 1;
             winner = 0;
-            cursor = { x: 7, y: 7 };
+            cursor = { x: Math.floor(boardSize / 2), y: Math.floor(boardSize / 2) };
         };
 
         const startClearAnimation = () => {
@@ -646,7 +646,7 @@
             moveHistory.length = 0;
             currentPlayer = 1;
             winner = 0;
-            cursor = { x: 7, y: 7 };
+            cursor = { x: Math.floor(boardSize / 2), y: Math.floor(boardSize / 2) };
             winsA = 0;
             winsB = 0;
 
