@@ -106,10 +106,21 @@
             font-size: 0.95rem;
             cursor: pointer;
             transition: transform 0.18s ease, box-shadow 0.18s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            text-align: center;
         }
 
         .btn:active {
             transform: scale(0.98);
+        }
+
+        /* Ensure anchor elements with .btn look like buttons (no underline) */
+        a.btn {
+            text-decoration: none;
+            color: inherit;
         }
 
         .btn-primary {
@@ -231,6 +242,7 @@
                 <div class="buttons">
                     <button id="undoBtn" class="btn btn-ghost" type="button">悔棋</button>
                     <button id="restartBtn" class="btn btn-primary" type="button">重开一局</button>
+                    <a id="moreGamesBtn" class="btn btn-ghost" href="more-games.html">更多游戏</a>
                 </div>
             </div>
 
